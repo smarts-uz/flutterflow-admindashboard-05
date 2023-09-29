@@ -119,6 +119,14 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           name: 'createuser',
           path: '/createuser',
           builder: (context, params) => CreateuserWidget(),
+        ),
+        FFRoute(
+          name: 'edituserpage',
+          path: '/edituserpage',
+          builder: (context, params) => EdituserpageWidget(
+            customer: params.getParam<CustomersRow>(
+                'customer', ParamType.SupabaseRow),
+          ),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
     );

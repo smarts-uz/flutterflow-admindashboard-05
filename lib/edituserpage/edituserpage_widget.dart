@@ -6,29 +6,46 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'createuser_model.dart';
-export 'createuser_model.dart';
+import 'edituserpage_model.dart';
+export 'edituserpage_model.dart';
 
-class CreateuserWidget extends StatefulWidget {
-  const CreateuserWidget({Key? key}) : super(key: key);
+class EdituserpageWidget extends StatefulWidget {
+  const EdituserpageWidget({
+    Key? key,
+    required this.customer,
+  }) : super(key: key);
+
+  final CustomersRow? customer;
 
   @override
-  _CreateuserWidgetState createState() => _CreateuserWidgetState();
+  _EdituserpageWidgetState createState() => _EdituserpageWidgetState();
 }
 
-class _CreateuserWidgetState extends State<CreateuserWidget> {
-  late CreateuserModel _model;
+class _EdituserpageWidgetState extends State<EdituserpageWidget> {
+  late EdituserpageModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => CreateuserModel());
+    _model = createModel(context, () => EdituserpageModel());
 
-    _model.textController1 ??= TextEditingController();
-    _model.textController2 ??= TextEditingController();
-    _model.textController3 ??= TextEditingController();
+    _model.textController1 ??= TextEditingController(
+        text: valueOrDefault<String>(
+      widget.customer?.name,
+      'Name',
+    ));
+    _model.textController2 ??= TextEditingController(
+        text: valueOrDefault<String>(
+      widget.customer?.email,
+      'Email',
+    ));
+    _model.textController3 ??= TextEditingController(
+        text: valueOrDefault<String>(
+      widget.customer?.job,
+      'Job',
+    ));
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
@@ -54,7 +71,7 @@ class _CreateuserWidgetState extends State<CreateuserWidget> {
           backgroundColor: FlutterFlowTheme.of(context).primary,
           automaticallyImplyLeading: true,
           title: Text(
-            'New user',
+            'update user',
             style: FlutterFlowTheme.of(context).bodyMedium,
           ),
           actions: [],
@@ -72,7 +89,7 @@ class _CreateuserWidgetState extends State<CreateuserWidget> {
                 Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 0.0, 16.0),
                   child: Text(
-                    'Create a New User',
+                    'Upadte an user',
                     style: FlutterFlowTheme.of(context).labelMedium,
                   ),
                 ),
@@ -215,18 +232,21 @@ class _CreateuserWidgetState extends State<CreateuserWidget> {
                   padding: EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 0.0, 16.0),
                   child: FFButtonWidget(
                     onPressed: () async {
-                      await CustomersTable().insert({
-                        'created_at':
-                            supaSerialize<DateTime>(getCurrentTimestamp),
-                        'name': _model.textController1.text,
-                        'job': _model.textController3.text,
-                        'email': _model.textController2.text,
-                        'salary': 4800,
-                      });
+                      await CustomersTable().update(
+                        data: {
+                          'name': _model.textController1.text,
+                          'job': _model.textController3.text,
+                          'email': _model.textController2.text,
+                        },
+                        matchingRows: (rows) => rows.eq(
+                          'id',
+                          widget.customer?.id,
+                        ),
+                      );
 
                       context.pushNamed('homeDashboard');
                     },
-                    text: 'Create User',
+                    text: 'Save',
                     options: FFButtonOptions(
                       width: double.infinity,
                       height: 55.0,
