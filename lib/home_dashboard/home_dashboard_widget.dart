@@ -242,31 +242,7 @@ class _HomeDashboardWidgetState extends State<HomeDashboardWidget> {
                                       size: 24.0,
                                     ),
                                     onPressed: () async {
-                                      await showModalBottomSheet(
-                                        isScrollControlled: true,
-                                        backgroundColor: Colors.transparent,
-                                        barrierColor: Color(0x00EDECE5),
-                                        context: context,
-                                        builder: (context) {
-                                          return GestureDetector(
-                                            onTap: () => _model
-                                                    .unfocusNode.canRequestFocus
-                                                ? FocusScope.of(context)
-                                                    .requestFocus(
-                                                        _model.unfocusNode)
-                                                : FocusScope.of(context)
-                                                    .unfocus(),
-                                            child: Padding(
-                                              padding: MediaQuery.viewInsetsOf(
-                                                  context),
-                                              child: Container(
-                                                height: double.infinity,
-                                                child: CreateUserWidget(),
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      ).then((value) => safeSetState(() {}));
+                                      context.pushNamed('createuser');
                                     },
                                   ),
                                 ),
